@@ -75,9 +75,10 @@ def generate_html(animals_data, query_name):
 
 
 def main():
-
-    animals = fetch_animals("fox")
-    generate_html(animals, "fox")
+    animal_name = input("Enter a name of an animal: ")
+    animals = fetch_animals(animal_name)
+    generate_html(animals, animal_name)
+    print("Website was successfully generated to the file animals.html.")
 
 
 if __name__ == "__main__":
