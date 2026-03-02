@@ -1,5 +1,17 @@
 import json
 from pathlib import Path
+import requests
+
+API_URL = "https://api.api-ninjas.com/v1/animals"
+API_KEY = "hvuQ6NjIxuF0lAiZcjZ5yl0Sl0Yf86gbiHbQnETG"  # replace with your key
+
+def fetch_animals(name):
+    headers = {"X-Api-Key": API_KEY}
+    params = {"name": name}
+    response = requests.get(API_URL, headers=headers, params=params)
+    response.raise_for_status()
+    return response.json()  # list of animals
+
 
 
 DATA_FILE = Path("animals_data.json")
@@ -55,19 +67,17 @@ def build_animals_html(data):
         output += serialize_animal(animal)
     return output
 
+def generate_html(animals_data, query_name):
+    template = TEMPLATE_FILE.read_text(encoding="utf-8")
+    animals_html = build_animals_html(animals_data)
+    new_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_html)
+    OUTPUT_FILE.write_text(new_html, encoding="utf-8")
+
 
 def main():
-    # Step 1: load JSON
-    animals_data = load_data(DATA_FILE)
 
-    # Step 2–4: read template, inject HTML, write animals.html
-    template = TEMPLATE_FILE.read_text(encoding="utf-8")
-
-    animals_html = build_animals_html(animals_data)
-
-    new_html = template.replace("__REPLACE_ANIMALS_INFO__", animals_html)
-
-    OUTPUT_FILE.write_text(new_html, encoding="utf-8")
+    animals = fetch_animals("fox")
+    generate_html(animals, "fox")
 
 
 if __name__ == "__main__":
