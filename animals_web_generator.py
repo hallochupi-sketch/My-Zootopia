@@ -1,17 +1,7 @@
 import json
 from pathlib import Path
-import requests
-
-API_URL = "https://api.api-ninjas.com/v1/animals"
-API_KEY = "hvuQ6NjIxuF0lAiZcjZ5yl0Sl0Yf86gbiHbQnETG"  # replace with your key
-
-def fetch_animals(name):
-    headers = {"X-Api-Key": API_KEY}
-    params = {"name": name}
-    response = requests.get(API_URL, headers=headers, params=params)
-    response.raise_for_status()
-    return response.json()  # list of animals
-
+# import requests
+import data_fetcher
 
 
 DATA_FILE = Path("animals_data.json")
@@ -106,8 +96,8 @@ def generate_error_html(animal_name):
 
 
 def main():
-    animal_name = input("Enter a name of an animal: ")
-    animals = fetch_animals(animal_name)
+    animal_name = input("Please enter an animal: ")
+    animals = data_fetcher.fetch_data(animal_name)
 
     if not animals:  # API returned an empty list
             generate_error_html(animal_name)
